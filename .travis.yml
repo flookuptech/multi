@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t techflookup/multi-test -f ./client/Dockerfile.dev ./client
+
+scripts:
+  - docker run techflookup/multi-test npm test -- --coverage
+
+after_success:
+  - docker build -t techflookup/multi-client ./client
+  - docker build -t techflookup/multi-nginx ./nginx
+  - docker build -t techflookup/multi-back  ./back
+  - docker build -t techflookup/multi-back2 ./back2
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push techflookup/multi-client
+  - docker push techflookup/multi-nginx
+  - docker push techflookup/multi-back
+  - docker push techflookup/multi-back2
