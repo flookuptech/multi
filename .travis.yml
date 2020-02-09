@@ -3,10 +3,10 @@ services:
   - docker
 
 before_install:
-  - docker build -t techflookup/multi-test -f ./client/Dockerfile.dev ./client
+  - docker build -t techflookup/react-test -f ./client/Dockerfile.dev ./client
 
 scripts:
-  - docker run techflookup/multi-test npm run test -- --coverage
+  - docker run techflookup/react-test npm test -- --coverage
 
 after_success:
   - docker build -t techflookup/multi-client ./client
